@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Random Quote Generator</title>
+<link rel="stylesheet" href="insp-style.css">
+</head>
+<body>
+<div id="quote">Random Quote Generator</div>
+<button id="new-quote-btn">New Quote</button>
+
+<script>
+  const quoteElement = document.getElementById("quote");
+  const newQuoteBtn = document.getElementById("new-quote-btn");
+
+  newQuoteBtn.addEventListener("click", getQuote);
+
+  function getQuote() {
+    fetch("https://api.kanye.rest")
+      .then((response) => response.json())
+      .then((data) => {
+        displayQuote(data.quote);
+      })
+      .catch((error) => {
+        console.log("Error fetching quote:", error);
+      });
+  }
+
+  function displayQuote(quote) {
+    quoteElement.innerHTML = `<p>${quote}</p>`;
+  }
+</script>
+</body>
+</html>

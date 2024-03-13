@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joke Quote Generator</title>
+    <link rel="stylesheet" href="insp-style.css">
+  </head>
+  <body>
+    <div id="quote">Joke Quote Generator</div>
+    <button id="new-quote-btn">New Joke</button>
+
+    <script>
+      const quoteElement = document.getElementById("quote");
+      const newQuoteBtn = document.getElementById("new-quote-btn");
+
+      newQuoteBtn.addEventListener("click", getJoke);
+
+      async function getJoke() {
+        try {
+          const response = await fetch("https://jokeapi-v2.p.rapidapi.com/joke/Any?blacklistFlags=nsfw,racist", {
+            method: "GET",
+            headers: {
+              "X-RapidAPI-Key": "678f171e82msh14d1c7e809a2346p1260bfjsn9f05fadc6f8d",
+            },
+          });
+
+          const data = await response.json();
+          if (data.error) {
+            throw new Error(data.message);
+          }
+
+          if (data.joke) {
+            displayQuote(data.joke, data.category);
+          } else if (data.setup && data.delivery) {
+            displayQuote(`${data.setup}<br>${data.delivery}`, data.category);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          quoteElement.innerHTML = "Failed to fetch joke quote.";
+        }
+      }
+
+      function displayQuote(text, category) {
+        quoteElement.innerHTML = `
+          <p>${text}</p>
+          <p>- Category: ${category}</p>
+        `;
+      }
+    </script>
+  </body>
+</html>
